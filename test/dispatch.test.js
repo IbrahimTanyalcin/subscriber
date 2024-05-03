@@ -453,4 +453,25 @@ describe(`testing functionality`, () => {
         subscriber.dispatch("my-other-channel", "my-event");
         expect(counter).toBe(2);
     })
+
+    test(`ondispatch should return empty array if dispatches operate on non-existing namespace(s)/event(s)`, async () => {
+        expect.assertions(4);
+        const 
+            subscriber = new Subscriber(),
+            subscription$1 = subscriber.subscribe("my-channel");
+        subscription$1.on("my-event@my-namespace", (data) => data.firstname);
+        subscription$1.on("my-other-event@my-namespace", (data) => data.lastname);
+        
+        expect(subscriber.dispatchReturn("my-channel", "@my-wrong-namespace", {firstname: "john", lastname: "doe"})).toEqual(
+            []
+        );
+        expect(subscriber.dispatchReturn("my-channel", "wrong-event", {firstname: "john", lastname: "doe"})).toEqual(
+            []
+        );
+        expect(subscriber.dispatchReturn("my-channel", "wrong-event@my-wrong-namespace", {firstname: "john", lastname: "doe"})).toEqual(
+            []
+        );
+        subscription$1.ondispatch = (data) => expect(data).toEqual([]);
+        subscriber.dispatchReturn("my-channel", "wrong-event@my-wrong-namespace", {firstname: "john", lastname: "doe"});
+    })
 });
