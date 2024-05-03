@@ -6,6 +6,6 @@ const
 Object.assign(
     global,
     {
-        Subscriber: require("./dist/subscriber.0.0.0.evergreen.umd.js")
+        Subscriber: require("./dist/subscriber.0.0.3.evergreen.umd.js")
     }
 )
