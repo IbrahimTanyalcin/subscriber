@@ -1,0 +1,43 @@
+name: Subscriber
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_ROOT: ${{ github.workspace }}
+    steps:
+      - name: Setup HOME_DIR and BASH_ENV
+        run: |
+          echo "HOME_DIR=${HOME}" >> $GITHUB_ENV
+          echo "BASH_ENV=${HOME}/.profile" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v3
+
+      - name: 'Install Node.js'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: 'install ubuntu libs'
+        run: >
+          sudo /bin/bash -c "
+          set -e -x -o pipefail;
+          :
+          ;"
+
+      - name: 'npm install and output coverage'
+        run: |
+          npm install
+          npm run test
+        working-directory: ${{ env.PACKAGE_ROOT }}
+
+      - name: 'Publish Code Coverage Results'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{ env.PACKAGE_ROOT }}/coverage/cobertura-coverage.xml
