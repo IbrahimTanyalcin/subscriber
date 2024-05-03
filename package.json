@@ -5,6 +5,10 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IbrahimTanyalcin/subscriber.git"
+  },
   "type": "module",
   "description": "flexible channel/event based subscriber pattern using Maps and Proxies",
   "main": "./dist/subscriber.0.0.0.evergreen.umd.min.js",
